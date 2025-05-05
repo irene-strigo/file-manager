@@ -1,14 +1,19 @@
 import {createReadStream} from "node:fs";
+import {resolvePath} from "./resolvePath.js";
+import {printLine} from "./printLine.js";
 
-export function catFunc(pathToDirectory) {
+export function catFunc(pathToFile) {
+    if (!pathToFile) {
+        return printLine('Invalid input');
+    }
     let data = ''
-    const readerStream = createReadStream(pathToDirectory);
-    readerStream.on('error', function(e){console.log('error in path')})
+    const resolvedPathToFile = resolvePath(pathToFile)
+    const readerStream = createReadStream(resolvedPathToFile);
+    readerStream.on('error', function(e){throw e})
     readerStream.on('data', function(chunk) {
         data += chunk
     });
     readerStream.on('end', function() {
-        process.stdout.write(data);
-        console.log()
+        printLine(data);
     })
 }

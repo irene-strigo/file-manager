@@ -1,8 +1,9 @@
 import os from "os";
+import {printLine} from "./printLine.js";
 
 export function osFunc(action) {
     if (!action || !action.startsWith('--')) {
-        return console.log('error occured');
+        return printLine('Invalid input');
     }
 
     const mapping = {
@@ -16,5 +17,5 @@ export function osFunc(action) {
         ? propValue() :
         JSON.stringify(propValue)
 
-    console.log('result is', action === '--username' ? result.username : result);
+    printLine('result is', action === '--username' ? result.username : result);
 }
