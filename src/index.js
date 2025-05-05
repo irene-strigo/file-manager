@@ -1,5 +1,12 @@
 import os from "os";
 import path from "path";
+import {addFunc} from "./addFunc.js";
+import {rmFunc} from "./rmFunc.js";
+import {catFunc} from "./catFunc.js";
+import {mkdirFunc} from "./mkdirFunc.js";
+import {osFunc} from "./osFunc.js";
+import {cpFunc} from "./cpFunc.js";
+import {rnFunc} from "./rnFunc.js";
 
 function exit(userName) {
     console.log(`Thank you for using File Manager, ${userName}, goodbye!`)
@@ -31,25 +38,6 @@ function cdFunc(pathToDirectory) {
     CWD = result
 }
 
-function osFunc(action) {
-    if (!action || !action.startsWith('--')) {
-        return console.log('error occured');
-    }
-
-    const mapping = {
-        '--architecture': 'arch',
-        '--username': 'userInfo',
-    }
-
-    const prop = mapping [action] || action.slice(2)
-    const propValue = os[prop];
-    const result = typeof propValue === 'function'
-        ? propValue() :
-        JSON.stringify(propValue)
-
-    console.log('result is', action === '--username' ? result.username : result);
-}
-
 function greeting(userName) {
     console.log(`Welcome to the File Manager, ${userName}!`)
 }
@@ -58,6 +46,13 @@ const commands = {
     os: osFunc,
     up: upFunc,
     cd: cdFunc,
+    cat: catFunc,
+    add: addFunc,
+    rm: rmFunc,
+    mkdir: mkdirFunc,
+    rn: rnFunc,
+    cp:cpFunc,
+    //mv:mvFunc,
 }
 
 const fileManager = () => {
@@ -69,14 +64,14 @@ const fileManager = () => {
 
     process.stdin.on("data", (data) => {
         const [command, ...args] = data.toString().trim().split(' ')
-        console.log('splitted', command, args)
+        //console.log('splitted', command, args)
         if (command === '.exit') {
             return exit(userName)
         }
 
         const func = commands[command]
         if (!func) {
-            console.log('err')
+            console.log('functionerr')
         } else {
             try {
                 func(...args)
